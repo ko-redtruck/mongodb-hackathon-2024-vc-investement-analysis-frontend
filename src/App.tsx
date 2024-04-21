@@ -1,4 +1,4 @@
-import { VStack, Textarea, Wrap, WrapItem, Box, Heading, Button, Text, useTab } from '@chakra-ui/react'
+import { VStack, Textarea, Wrap, WrapItem, Box, Heading, Button, Text, useTab, Stat, Link, Badge, StatLabel } from '@chakra-ui/react'
 import { useState } from 'react';
 import industryOptions from "../public/industry_options.json";
 import { Select } from 'chakra-react-select';
@@ -16,18 +16,20 @@ export default function Home() {
     { value: 'vanilla', label: 'Vanilla' }
   ]
   
-  const submitValues = () => {
+  const submitValues = async () => {
     console.log(companyDescription, industries);
-    //const results = fetch("htt")
-    setResults({"a": 2});
+    const response = await fetch("https://stingray-app-a52sr.ondigitalocean.app/analyse_startup");
+    const results = await response.json();
+    setResults(results);
   }
+  
   return (
     <>
     <Heading paddingTop={"2rem"} paddingBottom={"1rem"}>
       Will I be accpected to YC?
     </Heading>
     <VStack gap={"1rem"} align={"left"}>
-        <Text>We use data from crunchbase.com to compare your companies to successful YC applications and calculate your chances.</Text>
+        <Text>We compare your companies to successful YC applicants and calculate your chances.</Text>
         {results === undefined ? 
           <>
           <Textarea value={companyDescription} placeholder={'Describe the idea and business model of your company in 5 to 10 sentences.'} h={"10rem"} onChange={(e) => setCompanyDescription(e.target.value)} />
@@ -47,6 +49,31 @@ export default function Home() {
        
         <>
          <Heading as='h4' size='md'>Your results</Heading>
+        {results.map(({company, description, industries, totalFunding, website, similarity}) => 
+        
+          <VStack gap={"1rem"}>
+            <Box>
+              <Heading as={"h4"} size={"sm"}><Link href={website}>{company}</Link></Heading>
+              <Wrap>
+                <Box p={1} borderWidth={"1px"} borderRadius={"lg"}>
+                  <Stat>
+                    <StatLabel>Total funding</StatLabel>
+                    {totalFunding}
+                  </Stat>
+
+                </Box>
+                {industries.map((industry) => (
+                  <WrapItem key={industry}>
+                    <Badge>{industry}</Badge>
+                  </WrapItem>
+                ))}
+              </Wrap>
+              <Text>{description}</Text>
+
+            </Box>
+
+          </VStack>
+        )}
           <Button colorScheme='cyan' onClick={() => setResults(undefined)}>Edit my start-up data</Button>
         </>
     }
