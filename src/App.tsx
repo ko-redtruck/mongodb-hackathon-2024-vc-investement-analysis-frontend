@@ -18,11 +18,24 @@ export default function Home() {
   
   const submitValues = async () => {
     console.log(companyDescription, industries);
-    const response = await fetch("https://stingray-app-a52sr.ondigitalocean.app/analyse_startup");
+    //"https://stingray-app-a52sr.ondigitalocean.app/analyse_startup"
+    console.log(JSON.stringify({
+      "description": companyDescription
+    }));
+    const response = await fetch("http://localhost:5000/analyse_startup", {
+      "method": "POST",
+      "body": JSON.stringify({
+        "description": companyDescription
+      }),
+      "headers": {
+        "Content-Type": "application/json"
+      },
+    });
+
     const results = await response.json();
     setResults(results);
   }
-  
+
   return (
     <>
     <Heading paddingTop={"2rem"} paddingBottom={"1rem"}>
@@ -34,14 +47,7 @@ export default function Home() {
           <>
           <Textarea value={companyDescription} placeholder={'Describe the idea and business model of your company in 5 to 10 sentences.'} h={"10rem"} onChange={(e) => setCompanyDescription(e.target.value)} />
           <Box w={"100%"}>
-          <Select
-            value={industries}
-            isMulti
-            options={industryOptions}
-            onChange={setIndustries}
-          size={"lg"}
-          
-          />
+
         </Box>
         <Button colorScheme='green' onClick={submitValues}>Analyse my start-up</Button>
       </>
@@ -52,7 +58,7 @@ export default function Home() {
         {results.map(({company, description, industries, totalFunding, website, similarity}) => 
         
           <VStack gap={"1rem"}>
-            <Box>
+            <Box w={"100wH"}>
               <Heading as={"h4"} size={"sm"}><Link href={website}>{company}</Link></Heading>
               <Wrap>
                 <Box p={1} borderWidth={"1px"} borderRadius={"lg"}>
