@@ -22,7 +22,7 @@ export default function Home() {
     console.log(JSON.stringify({
       "description": companyDescription
     }));
-    const response = await fetch("https://stingray-app-a52sr.ondigitalocean.app/analyse_startup", {
+    const response = await fetch("https://lobster-app-ineq9.ondigitalocean.app//analyse_startup", {
       "method": "POST",
       "body": JSON.stringify({
         "description": companyDescription
