@@ -18,11 +18,11 @@ export default function Home() {
   
   const submitValues = async () => {
     console.log(companyDescription, industries);
-    //"https://stingray-app-a52sr.ondigitalocean.app/analyse_startup"
+    //""
     console.log(JSON.stringify({
       "description": companyDescription
     }));
-    const response = await fetch("http://localhost:5000/analyse_startup", {
+    const response = await fetch("https://stingray-app-a52sr.ondigitalocean.app/analyse_startup", {
       "method": "POST",
       "body": JSON.stringify({
         "description": companyDescription
